@@ -75,8 +75,6 @@ btnScrollTo.addEventListener('click', function (event) {
   section1.scrollIntoView({ behavior: 'smooth'});
 })
 
-
-
 //////////////////////////////////////////////////////////////
 ///////Page navogation.
 
@@ -106,6 +104,43 @@ document.querySelector('.nav__links').addEventListener('click',function (event) 
     console.log(id);
     document.querySelector(id).scrollIntoView({behavior:'smooth'})};
 })
+
+
+//Tabbed component
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+//Event delegation power bubbling.
+
+//1. add event listener to common parent element
+//2. Determine what element originated the event
+
+tabsContainer.addEventListener('click', function (event) {
+  const clicked = event.target.closest('.operations__tab');
+  console.log(clicked);
+
+  //Guard clause
+  //Aqui si se ahce click fuera de los botones nuestro guardia retornara la funcion imediatamente.
+  if(!clicked) return
+
+  //Remove active classes and constent area
+  tabs.forEach(tab => tab.classList.remove('operations__tab--active'));
+
+  tabsContent.forEach(content =>
+    content.classList.remove('operations__content--active'));
+    
+    
+  //Active tab
+  clicked.classList.add('operations__tab--active');
+
+  //Active content area
+  console.log(clicked.dataset.tab);
+  document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
+})
+
+
+
 
 
 
@@ -247,25 +282,43 @@ document
 
 //////////////////////////////////////////////////////////
 ///////DOM Traversing
-
+/*
 const h1 = document.querySelector('h1');
 
-//Going downward: child
-//no importa que tan profundo este el lo encontrara
+console.log('========Going downward: children');
+//Going downward: child:selecciona todos los elementos con la clase destaca los almacena en un array no importa que tan profundo este el lo encontrara
 console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'tomato';
 
 
+console.log('========Going upward: parenst');
+
+//Going upwards: parents.
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
 
 
+h1.closest('h1').style.background = 'var(--gradient-primary)';
 
+console.log('==========Going sidways: siblings');
+//Going sidways: siblings
 
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
 
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
 
-
-
-
-
-
+//Todos los elementos hermano de un elemento incluido el propio elemento
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function (el) {
+  if(el !== h1 ) el.style.transform = 'scale(0.5)';
+});
+*/
 
 
 

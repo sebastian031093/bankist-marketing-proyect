@@ -168,6 +168,64 @@ nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
 
 
+//Sticky navigation
+//No es muy recomendable llamar el objeto window, pero aja 
+
+//Queremos que la barra de navegacion aparesce justo despues de atravezar toda la primera seccion.
+
+// const initialCoords = section1.getBoundingClientRect();
+// console.log(initialCoords);
+
+// //Esto es una pesima idea para el rendimiento pues scroll llama en cada momento la accion y aja.
+// window.addEventListener('scroll', function () {
+//   console.log(window.scrollY); // la posicion de la ventana desde la parte superior.
+
+//   window.scrollY > initialCoords.top ? nav.classList.add('sticky') : nav.classList.remove('sticky');
+// })
+
+
+//Sticky navigation: INTERSECTION OBSERVER API
+
+// const obsCallback = function (entries, observe) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   })
+// };
+
+// const obsOptions = {
+//   root:null,
+//   threshold: [0, 0.2],
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+console.log(navHeight);
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  // console.log(entry);
+
+  !entry.isIntersecting
+     ? nav.classList.add('sticky')
+     : nav.classList.remove('sticky');
+}
+
+const headerObserver = new IntersectionObserver(stickyNav,{
+  root:null, //Poque estamos interesados en el veouport.
+  threshold:0,
+  rootMargin:`-${navHeight}px` //lo hacemos para que justo antes de crusar al proximo elemento esa porcion del ancho se vea copada por la barra de navegacion sin importar la resolucion de pantallas. 
+});
+
+headerObserver.observe(header);
+
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+///////////////////////////////////////////////////
+
+
 
 
 /////////////////////////////////////////////

@@ -202,7 +202,7 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 
 const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
-console.log(navHeight);
+// console.log(navHeight);
 
 const stickyNav = function (entries) {
   const [entry] = entries;
@@ -242,11 +242,164 @@ const sectionsObserver = new IntersectionObserver(revealSection,{
 
 allSections.forEach(section => {
   sectionsObserver.observe(section);
-  section.classList.add('section--hidden');
+  //TODO: RECUERDA DESCOMENTAR ESTO
+  // section.classList.add('section--hidden');
 });
 
 
+//Lazy loading images
 
+const imgTargets = document.querySelectorAll('img[data-src]');
+// console.log(imgTargets);
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entries);
+
+  if(!entry.isIntersecting) return;
+
+  //Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg,{
+  root:null,
+  threshold:0,
+  rootMargin: '200px',
+});
+
+imgTargets.forEach( img => imgObserver.observe(img));
+
+
+// Slider.
+const slider = function () {
+  const slides = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const dotContainer = document.querySelector('.dots');
+
+
+  // const slider = document.querySelector('.slider');
+  // slider.style.transform = 'scale(0.4) translateX(-800px)';
+  // slider.style.overflow = 'visible';
+
+  let curSlide = 0;
+  const maxSlide = slides.length;
+
+
+  //FUNCTIONS
+  //template dots
+
+  const createDots = function () {
+    slides.forEach(function ( _,i) {
+      dotContainer.insertAdjacentHTML('beforeend', `<button   class="dots__dot" data-slide=${i}></button>`);
+    });
+  };
+
+
+
+  const actiavateDot = function (slide) {
+
+    document.querySelectorAll('.dots__dot').forEach(dot => dot. classList.remove('dots__dot--active'));
+
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+
+  }
+
+  // slides.forEach((s, i ) => (s.style.transform = `translateX($ {100 * i}%)`));
+
+  //0%, 100%, 200%, 300%;
+
+
+  const goToSlide = function (slide) {
+
+    slides.forEach((s,i) => {
+      (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+    });
+  }
+
+
+
+  //Nxt slide
+  const nextSlide = function () {
+    if(curSlide === maxSlide -1 ){
+      curSlide = 0;
+    }else{
+      curSlide++;
+    }
+
+    goToSlide(curSlide);
+    actiavateDot(curSlide);
+  }
+
+  const prevSlide = function () {
+    if(curSlide === 0){
+      curSlide = maxSlide - 1;
+    }else{
+      curSlide--;
+    }
+    goToSlide(curSlide);
+    actiavateDot(curSlide);
+  }
+
+
+  const init = function() {
+    goToSlide(0);
+    createDots();
+    actiavateDot(0);
+  }
+
+  init();
+
+
+  //Event handlers.
+  btnRight.addEventListener('click', nextSlide
+    //Ahora bien como funciona esto: hora recuerda que  desplazarte a sobre los elementos es basicamente cambiar el  valor de transfomr: trasleteX() y asi podramos lograr que se   desplace 
+    // if(curSlide === maxSlide -1 ){
+    //   curSlide = 0;
+    // }else{
+    //   curSlide++;
+    // }
+
+    // slides.forEach((s, i) => (s.style.transform = `translateX($  {100 * (i - curSlide)}%)`));
+    //Refactori
+
+
+  );
+  // curSlide =1: -100%, 0%, 100%, 200%
+
+  btnLeft.addEventListener('click', prevSlide);
+
+
+  //Implementar desplazamiento con las flechas del teclado
+
+  document.addEventListener('keydown', function (event) {
+    console.log(event); // test para mirar las keys de las teclas   key: "ArrowRight", key: "ArrowLeft"
+    if(event.key === 'ArrowLeft') prevSlide();
+    event.key === 'ArrowRight' && nextSlide();
+  });
+
+  dotContainer.addEventListener('click',function (event) {
+    if(event.target.classList.contains('dots__dot')){
+      // console.log('DOT');
+      const {slide} = event.target.dataset;
+      goToSlide(slide);
+      actiavateDot(slide);
+    }
+  })
+};
+
+
+slider();
+//Esto es algo muy comun de hacer incluso, los elementos que seleccionamos para trabajar con el DOM se pueden pasar en un objeto que los contenga todos COOLLLLLLLLL .
 
 
 

@@ -243,7 +243,7 @@ const sectionsObserver = new IntersectionObserver(revealSection,{
 allSections.forEach(section => {
   sectionsObserver.observe(section);
   //TODO: RECUERDA DESCOMENTAR ESTO
-  // section.classList.add('section--hidden');
+  section.classList.add('section--hidden');
 });
 
 
@@ -399,6 +399,8 @@ const slider = function () {
 
 
 slider();
+
+
 //Esto es algo muy comun de hacer incluso, los elementos que seleccionamos para trabajar con el DOM se pueden pasar en un objeto que los contenga todos COOLLLLLLLLL .
 
 
@@ -585,6 +587,21 @@ console.log(h1.parentElement.children);
 });
 */
 
+//Lifecyde DOM evenst
+
+document.addEventListener('DOMContentLoaded', function (event) {
+  console.log( 'HTML parsed and DOM tree built !' ,event);
+})
+
+window.addEventListener('load', function (event) {
+  console.log('Page fully loaded', event);
+});
+
+// window.addEventListener('beforeunload', function (event) {
+//   event.preventDefault();
+//   console.log(event);
+//   event.returnValue = ''; 
+// })
 
 
 
